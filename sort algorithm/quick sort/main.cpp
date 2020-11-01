@@ -10,34 +10,35 @@
 using namespace std;
 using std::vector;
 
-void quickSort(int left, int right, vector<int>& arr)
+
+int partition(vector<int> &a,int low, int high)
 {
-    int low, high, m, pivot;
-    low = left; high = right;
- 
-    m = (low + high) / 2;
-    if (arr[low] > arr[high]) swap(arr[low], arr[high]);
-    if (arr[m] > arr[high]) swap(arr[m], arr[high]);
-    if (arr[m] > arr[low]) swap(arr[m], arr[low]);
- 
-    pivot = arr[low];
-    while ( low < high )
+    int pivot = a[low], i = low, j = high;
+    while(i < j)
     {
-        while ( low<high && arr[high] >= pivot)
-            high--;
-        while (low < high && arr[low] <= pivot)
-            low++;
-        if (low < high)
-            swap(arr[low], arr[high]);
+        while(i < j && pivot <= a[j])
+            j--;
+        if(i < j)  swap(a[i++],a[j]);
+        while(i < j && pivot >= a[i])
+            i++;
+        if(i < j) swap(a[j--],a[i]);
     }
+    return j;
+}
  
-    if (left < low)
+ 
+void quicksort(vector<int> &a,int low, int high)
+{
+    int pivotpos;
+    if(low < high)
     {
-        swap(arr[left], arr[low]);
-        quickSort(left, low-1, arr);
-        quickSort(low + 1, right, arr);
+        pivotpos = partition(a,low,high);
+        quicksort(a,low,pivotpos);
+        quicksort(a,pivotpos+1,high);
     }
 }
+
+
 
 
 int main() {
@@ -45,21 +46,16 @@ int main() {
     cin>>n;
     //cout<<n;
     vector<int> obj;
-    
     for(int i=0;i<n ;i++)
     {
         int v;
         cin >> v;
         obj.push_back(v);
     }
-     quickSort(0,n-1,obj);
-    
+     quicksort(obj,0,n-1);
     for(int i=0;i<n ;i++)
     {
         cout<<obj[i]<<" ";
-        
     }
     cout <<endl;
-
-    
 }
